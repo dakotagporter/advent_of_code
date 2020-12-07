@@ -1,20 +1,20 @@
-"""Password Philosophy"""
+"""
+url = 'https://adventofcode.com/2020/day/2'
 
-# url = 'https://adventofcode.com/2020/day/2'
+Password Philosophy
 
-raw_input = []
+Each line gives the password policy and then the password. The password policy
+indicates the lowest and highest number of times a given letter must appear for
+the password to be valid. For example, 1-3 a means that the password must
+contain a at least 1 time and at most 3 times. How many passwords are valid
+according to their policies?
+"""
 
-# opens corresponding input file, strips newline, adds to input list
-with open('day2.txt', 'r') as fh:
-    for item in fh.readlines():
-        raw_input.append(item.strip("\n"))
 
-
-def split():
+def split(raw_input):
     """
-    Splits each line into all necessary parts to prep for evaluation.
+    Splits each line into policy, letter and password for verification.
     """
-
     policy_min = []
     policy_max = []
     letter = []
@@ -33,7 +33,7 @@ def split():
 
 def verify(policy_min, policy_max, letter, password):
     """
-    Verifies puzzle task and returns needed information.
+    Verifies password according to above parameters.
     """
     i = 0
 
@@ -42,12 +42,18 @@ def verify(policy_min, policy_max, letter, password):
         if int(policy_min[x]) <= int(count) <= int(policy_max[x]):
             i += 1
 
-    print(i)
+    print('Valid Passwords (count):', i)
 
 
 def part_two(policy_min, policy_max, letter, password):
     """
-    Verifies puzzle task part two and returns needed information.
+    Each policy actually describes two positions in the password, where 1 means
+    the first character, 2 means the second character, and so on. (Be careful;
+    Toboggan Corporate Policies have no concept of "index zero"!) Exactly one
+    of these positions must contain the given letter. Other occurrences of the
+    letter are irrelevant for the purposes of policy enforcement.
+
+    Verifies password according to above parameters.
     """
     i = 0
 
@@ -60,8 +66,15 @@ def part_two(policy_min, policy_max, letter, password):
             else:
                 i += 1
 
-    print(i)
+    print('Valid Passwords (position):', i)
 
 
 if __name__ == '__main__':
-    split()
+    raw_input = []
+
+    # opens corresponding input file, strips newline, adds to input list
+    with open('day2.txt', 'r') as fh:
+        for item in fh.readlines():
+            raw_input.append(item.strip("\n"))
+
+    split(raw_input)

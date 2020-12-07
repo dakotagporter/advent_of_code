@@ -1,56 +1,81 @@
-"""Binary Boarding"""
+"""
+url = https://adventofcode.com/2020/day/5
 
-# url = https://adventofcode.com/2020/day/5
+Binary Boarding
 
-raw_input = []
+The first 7 characters will either be F or B; these specify exactly one of the
+128 rows on the plane (numbered 0 through 127). Each letter tells you which
+half of a region the given seat is in. Start with the whole list of rows; the
+first letter indicates whether the seat is in the front (0 through 63) or the
+back (64 through 127). The next letter indicates which half of that region the
+seat is in, and so on until you're left with exactly one row.
+"""
 
-# opens corresponding input file, strips newline, adds to input list
-with open('day5.txt', 'r') as fh:
-    for item in fh.readlines():
-        raw_input.append(item.strip("\n"))
 
+def decode(raw_input):
+    """
+    Decodes binary encoded strings from input.
+    """
+    seat_ids = []
 
-def decode():
     for assign in raw_input:
-        up_row = 128
-        low_row = 0
-
-        up_seat = 8
-        low_seat = 0
-
-        row = 0
-        col = 0
-
+        """
+        Iterates over each boarding pass and determines row number and seat
+        position by reducing valid ranges according to input letter.
+        """
         row_matrix = assign[:7]
         seat_matrix = assign[7:]
 
+        row_range = list(range(0, 128))
+        seat_range = list(range(0, 8))
+
         for letter in row_matrix:
             if letter == 'F':
-                up_row -= len(range(int(low_row), int(up_row))) / 2
+                row_range = row_range[:int(len(row_range)/2)]
             else:
-                low_row += len(range(int(low_row), int(up_row))) / 2
+                row_range = row_range[int(len(row_range)/2):]
 
         for letter in seat_matrix:
-            print(letter)
             if letter == 'L':
-                up_seat -= len(range(int(low_seat), int(up_seat))) / 2
+                seat_range = seat_range[:int(len(seat_range)/2)]
             else:
-                up_seat -= len(range(int(low_seat), int(up_seat))) / 2
-            print(up_seat, low_seat)
+                seat_range = seat_range[int(len(seat_range)/2):]
+
         if row_matrix[6] == 'F':
-            row += low_row
+            row = min(row_range)
         else:
-            row += up_row
+            row = max(row_range)
 
         if seat_matrix[2] == 'L':
-            col += low_seat
+            col = min(seat_range)
         else:
-            col += up_seat
-        print(col)
-        #print(row)
+            col = max(seat_range)
+
+        seat_id = (row * 8) + col  # Calculates seat_id according to puzzle
+        seat_ids.append(seat_id)
+
+    print('Highest seat ID value:', max(seat_ids))
+    part_two(seat_ids)
 
 
+def part_two(seat_ids):
+    """
+    What is the ID of your seat?
+
+    Finds the single missing seat_id by iterating over range of unique values
+    of all boarding passes.
+    """
+    for i in range(min(set(seat_ids)), max(set(seat_ids))+1):
+        if i not in set(seat_ids):
+            print('My seat ID:', i)
 
 
 if __name__ == '__main__':
-    decode()
+    raw_input = []
+
+    # opens corresponding input file, strips newline, adds to input list
+    with open('day5.txt', 'r') as fh:
+        for item in fh.readlines():
+            raw_input.append(item.strip("\n"))
+
+    decode(raw_input)
