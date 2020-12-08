@@ -41,19 +41,27 @@ def filter(raw_input):
 
 
 def part_two(forms):
+    '''
+    Checks if certain questions have been answered yes by each group in each
+    form by iterating through each form and its letters.
+    '''
     count = []
     duplicates = []
 
     for form in forms:
+
         for letter in form[0]:
-            for form in forms:
-                if letter in form:
-                    if form == forms[-1]:
+
+            for i in range(0, len(form)):
+
+                if letter in form[i]:
+                    if i == len(form)-1:
                         duplicates.append(letter)
-                    else:
-                        continue
                 else:
                     break
+
+        count.append(len(duplicates))
+        duplicates = []
 
     print('Sum of answers where ALL members answered "yes:', sum(count))
 
