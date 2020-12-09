@@ -12,6 +12,11 @@ enforce!
 
 
 def filter(raw_input):
+    """
+    Creates the hierarchy of colors by splitting their requirements and turning
+    each on into a dictionary with the main color as the key and the colors it
+    must contain as the values.
+    """
     values = []
     color_tree = {}
     for line in raw_input:
@@ -25,28 +30,33 @@ def filter(raw_input):
         color_tree[key] = values
         values = []
 
-    verify(color_tree)
+    #verify(color_tree)
+    part_two(color_tree)
 
 
 def verify(color_tree):
+    """
+    Iterates through every key and determines if it contains any bags that
+    directly contain a shiny gold bag.
+    """
     my_bag = 'shiny gold'
-    valid_bag = []
+    valid_bags = []
 
-    for key in list(color_tree.keys()):
-        print(color_tree['dull crimson'])
-        for i in range(0, len(color_tree[key])):
-            print(color_tree[key])
-            bag = color_tree[key][i]
-            if bag == 'shiny gold':
-                print('has shiny gold!')
-                valid_bag.append(key)
-            else:
-                key = bag
-                print(key)
+    for key in color_tree.keys():
+        if my_bag in color_tree[key]:
+            valid_bags.append(key)
+
+    for bag in valid_bags:
+        for key in color_tree.keys():
+            if bag in color_tree[key]:
+                valid_bags.append(key)
+
+    print('Number of bags eventually containing a shiny gold bag:',
+          len(set(valid_bags)))
 
 
-    #print(valid_bag)
-    print(color_tree['bright brown'])
+def part_two(color_tree):
+    color_tree['shiny gold']
 
 
 if __name__ == '__main__':
